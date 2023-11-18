@@ -1,0 +1,8 @@
+skillMetadata:
+  sections:
+    - name: Ready Notification
+      fields:
+        - name: speak_ready
+          type: checkbox
+          label: Speak when everything is ready after booting
+          value: "true"
