@@ -1,1 +1,1 @@
-(disable|turn off|deactivate) (ready|start|boot|load|readiness|started|booted|loaded) (sound|notification|speech|sounds|notifications)
+(disable|turn off|deactivate) (ready|start|startup|start up|boot|load|readiness|started|booted|loaded) (sound|notification|speech|sounds|notifications)
