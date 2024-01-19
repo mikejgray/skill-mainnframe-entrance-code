@@ -42,13 +42,22 @@ class BootFinishedSkill(OVOSSkill):
         """
         Speak `ready` dialog when ready unless disabled in settings
         """
-        return self.settings.get("speak_ready") is not False
-
-    def handle_ready(self, _: Message):
+        return self.settings.get("speak_ready", True)
+        
+    @property
+    def ready_sound(self):
+        """
+        play sound when ready unless disabled in settings
+        """
+        return self.settings.get("ready_sound", True)
+                                 
+    def handle_ready(self, message: Message):
         """
         Handle mycroft.ready event. Notify the user everything is ready if
         configured.
         """
+        if self.ready_sound:
+            self.acknowledge()
         self.enclosure.eyes_on()
         if self.speak_ready:
             self.speak_dialog("ready")
@@ -57,7 +66,7 @@ class BootFinishedSkill(OVOSSkill):
         self.enclosure.eyes_blink("b")
 
     @intent_handler("enable_ready_notification.intent")
-    def handle_enable_notification(self, _: Message):
+    def handle_enable_notification(self, message: Message):
         """
         Handle a request to enable ready announcements
         """
@@ -65,7 +74,7 @@ class BootFinishedSkill(OVOSSkill):
         self.speak_dialog("confirm_speak_ready")
 
     @intent_handler("disable_ready_notification.intent")
-    def handle_disable_notification(self, _: Message):
+    def handle_disable_notification(self, message: Message):
         """
         Handle a request to disable ready announcements
         """
