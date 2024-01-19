@@ -26,30 +26,16 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-from ovos_bus_client import Message
+from ovos_bus_client.message import Message
 from ovos_utils import classproperty
 from ovos_utils.log import LOG
-from ovos_utils.process_utils import RuntimeRequirements
-from neon_utils.skills import NeonSkill
-from ovos_workshop import intent_handler
+from ovos_workshop.skills import OVOSSkill
+from ovos_workshop.decorators import intent_handler
 
 
-class CoreReadySkill(NeonSkill):
-    def __init__(self, **kwargs):
-        NeonSkill.__init__(self, **kwargs)
+class BootFinishedSkill(OVOSSkill):
+    def initialize(self):
         self.add_event("mycroft.ready", self.handle_ready)
-
-    @classproperty
-    def runtime_requirements(self):
-        return RuntimeRequirements(network_before_load=False,
-                                   internet_before_load=False,
-                                   gui_before_load=False,
-                                   requires_internet=False,
-                                   requires_network=False,
-                                   requires_gui=False,
-                                   no_internet_fallback=True,
-                                   no_network_fallback=True,
-                                   no_gui_fallback=True)
 
     @property
     def speak_ready(self):
