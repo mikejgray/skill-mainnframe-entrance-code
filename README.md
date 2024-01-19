@@ -1,12 +1,12 @@
-# <img src='https://0000.us/klatchat/app/files/neon_images/icons/neon_skill.png' card_color="#FF8600" width="50" style="vertical-align:bottom">Ready
+# Finished Booting
 
 ## Summary
 
-Skill to speak when Neon is ready
+Skill to speak when OVOS is ready
 
 ## Description
 
-When Neon is started or restarted, this skill will speak a notification to the
+When OpenVoiceOS is started or restarted, this skill will speak a notification to the
 user. This speech can be enabled/disabled by intent.
 
 ## Examples
@@ -14,17 +14,8 @@ user. This speech can be enabled/disabled by intent.
 - "Enable ready notifications."
 - "Disable load speech."
 
-## Contact Support
-
-Use the [link](https://neongecko.com/ContactUs) or [submit an issue on GitHub](https://help.github.com/en/articles/creating-an-issue)
-
 ## Credits
-[NeonDaniel](https://github.com/NeonDaniel)
-[NeonGeckoCom](https://github.com/NeonGeckoCom)
+[NeonGeckoCom](https://github.com/NeonGeckoCom/skill-core_ready)
 
 ## Category
 **Daily**
-
-## Tags
-#NeonGecko Original
-#NeonAI
