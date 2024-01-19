@@ -36,7 +36,6 @@ class BootFinishedSkill(OVOSSkill):
     def initialize(self):
         self.add_event("mycroft.ready", self.handle_ready)
         self.enclosure = EnclosureAPI(self.bus)
-        self.enclosure.eyes_narrow()
 
     @property
     def speak_ready(self):
