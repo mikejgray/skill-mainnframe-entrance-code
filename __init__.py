@@ -25,17 +25,18 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 from ovos_bus_client.message import Message
-from ovos_utils import classproperty
-from ovos_utils.log import LOG
+from ovos_bus_client.apis.enclosure import EnclosureAPI
 from ovos_workshop.skills import OVOSSkill
 from ovos_workshop.decorators import intent_handler
+from ovos_utils.log import LOG
 
 
 class BootFinishedSkill(OVOSSkill):
     def initialize(self):
         self.add_event("mycroft.ready", self.handle_ready)
+        self.enclosure = EnclosureAPI(self.bus)
+        self.enclosure.eyes_narrow()
 
     @property
     def speak_ready(self):
@@ -49,10 +50,12 @@ class BootFinishedSkill(OVOSSkill):
         Handle mycroft.ready event. Notify the user everything is ready if
         configured.
         """
+        self.enclosure.eyes_on()
         if self.speak_ready:
             self.speak_dialog("ready")
         else:
-            LOG.info("Ready notification disabled in settings")
+            LOG.debug("Ready notification disabled in settings")
+        self.enclosure.eyes_blink("b")
 
     @intent_handler("enable_ready_notification.intent")
     def handle_enable_notification(self, _: Message):
