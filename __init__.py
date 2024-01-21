@@ -26,7 +26,6 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 from ovos_bus_client.message import Message
-from ovos_bus_client.apis.enclosure import EnclosureAPI
 from ovos_workshop.skills import OVOSSkill
 from ovos_workshop.decorators import intent_handler
 from ovos_utils.log import LOG
@@ -35,7 +34,6 @@ from ovos_utils.log import LOG
 class BootFinishedSkill(OVOSSkill):
     def initialize(self):
         self.add_event("mycroft.ready", self.handle_ready)
-        self.enclosure = EnclosureAPI(self.bus)
 
     @property
     def speak_ready(self):
