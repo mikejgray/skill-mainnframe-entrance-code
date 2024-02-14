@@ -1,8 +1,8 @@
-# Finished Booting
+# Finished Booting/Entrance Code
 
 ## Summary
 
-Skill to speak when MAINNFRAME is ready
+Skill to ask for entrance code and speak when MAINNFRAME is ready
 
 ## Description
 
