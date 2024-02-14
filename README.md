@@ -2,11 +2,11 @@
 
 ## Summary
 
-Skill to speak when OVOS is ready
+Skill to speak when MAINNFRAME is ready
 
 ## Description
 
-When OpenVoiceOS is started or restarted, this skill will speak a notification to the
+When MAINNFRAME is started or restarted, this skill will speak a notification to the
 user. This speech can be enabled/disabled by intent.
 
 ## Examples
@@ -15,7 +15,7 @@ user. This speech can be enabled/disabled by intent.
 - "Disable load speech."
 
 ## Credits
-[NeonGeckoCom](https://github.com/NeonGeckoCom/skill-core_ready)
+[xSquaredLabs](https://xsquaredlabs.com)
 
 ## Category
 **Daily**
