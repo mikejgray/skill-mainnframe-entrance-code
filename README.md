@@ -19,7 +19,8 @@ Incompatible with `ovos-skill-boot-finished.openvoiceos` and `skill-core_ready.n
 
 ```json
 {
-  "entrancecodes": {
+  "__mycroft_skill_firstrun": false,
+  "entrance_codes": {
     "Mike": "pineapple"
   }
 }

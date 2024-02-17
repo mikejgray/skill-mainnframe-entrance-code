@@ -32,14 +32,14 @@ from ovos_workshop.decorators import intent_handler, skill_api_method
 
 
 class BootFinishedSkill(OVOSSkill):
+    attempts = 1
+    active_user = ""
     def initialize(self):
         self.add_event("mycroft.ready", self.handle_ready)
-        self.attempts = 0
-        self.active_user = ""
 
     @property
     def entrance_codes(self):
-        return self.settings.get("entrance_codes", {})
+        return self.settings.get("entrance_codes") or {}
 
     @property
     def speak_ready(self):
@@ -72,7 +72,10 @@ class BootFinishedSkill(OVOSSkill):
         else:
             self.log.debug("Ready notification disabled in settings")
         self.enclosure.eyes_blink("b")
-        self.authenticate_user()
+        if self.entrance_codes:
+            self.authenticate_user()
+        else:
+            self.log.warning(f"No entrance codes configured, please add them in the skill settings at {self.settings.path}")
 
     @intent_handler("enable_ready_notification.intent")
     def handle_enable_notification(self, message: Message):
@@ -93,22 +96,22 @@ class BootFinishedSkill(OVOSSkill):
     def authenticate_user(self):
         user_code = self.get_response("entrance_code")
 
-        if self.attempts == 3:
+        if self.attempts < 3:
+            for user, entrance_code in self.entrance_codes.items():
+                if user_code.lower().replace(".", "") == entrance_code:
+                    self.speak_dialog("valid_code", data={"user": user})
+                    self.active_user = user
+                    break
+            if not self.active_user:
+                self.speak_dialog("wrong_code", data={"code": user_code})
+                self.attempts += 1
+                self.authenticate_user()
+            self.connect_to_spotify()
+
+        else:
             self.speak_dialog("shutdown")
             self.bus.emit(Message("system.shutdown"))
-            self.attempts = 0
-            return
-        for user, entrance_code in self.entrance_codes.items():
-            if user_code == entrance_code:
-                self.speak_dialog("valid_code", data={"user": user})
-                self.active_user = user
-                break
-        if not self.active_user:
-            self.speak_dialog("wrong_code", data={"code": user_code})
-            self.attempts += 1
-            self.authenticate_user()
-
-        self.connect_to_spotify()
+            self.attempts = 1
 
     def connect_to_spotify(self):
         connect_to_spotify = self.get_response("ask_spotify_connect")
