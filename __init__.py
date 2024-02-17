@@ -25,15 +25,21 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+import os
 from ovos_bus_client.message import Message
 from ovos_workshop.skills import OVOSSkill
-from ovos_workshop.decorators import intent_handler
-from ovos_utils.log import LOG
+from ovos_workshop.decorators import intent_handler, skill_api_method
 
 
 class BootFinishedSkill(OVOSSkill):
     def initialize(self):
         self.add_event("mycroft.ready", self.handle_ready)
+        self.attempts = 0
+        self.active_user = ""
+
+    @property
+    def entrance_codes(self):
+        return self.settings.get("entrance_codes", {})
 
     @property
     def speak_ready(self):
@@ -41,14 +47,18 @@ class BootFinishedSkill(OVOSSkill):
         Speak `ready` dialog when ready unless disabled in settings
         """
         return self.settings.get("speak_ready", True)
-        
+
     @property
     def ready_sound(self):
         """
         play sound when ready unless disabled in settings
         """
         return self.settings.get("ready_sound", True)
-                                 
+
+    @skill_api_method
+    def get_active_user(self):
+        return self.active_user
+
     def handle_ready(self, message: Message):
         """
         Handle mycroft.ready event. Notify the user everything is ready if
@@ -60,8 +70,9 @@ class BootFinishedSkill(OVOSSkill):
         if self.speak_ready:
             self.speak_dialog("ready")
         else:
-            LOG.debug("Ready notification disabled in settings")
+            self.log.debug("Ready notification disabled in settings")
         self.enclosure.eyes_blink("b")
+        self.authenticate_user()
 
     @intent_handler("enable_ready_notification.intent")
     def handle_enable_notification(self, message: Message):
@@ -78,3 +89,31 @@ class BootFinishedSkill(OVOSSkill):
         """
         self.settings["speak_ready"] = False
         self.speak_dialog("confirm_no_speak_ready")
+
+    def authenticate_user(self):
+        user_code = self.get_response("entrance_code")
+
+        if self.attempts == 3:
+            self.speak_dialog("shutdown")
+            self.bus.emit(Message("system.shutdown"))
+            self.attempts = 0
+            return
+        for user, entrance_code in self.entrance_codes.items():
+            if user_code == entrance_code:
+                self.speak_dialog("valid_code", data={"user": user})
+                self.active_user = user
+                break
+        if not self.active_user:
+            self.speak_dialog("wrong_code", data={"code": user_code})
+            self.attempts += 1
+            self.authenticate_user()
+
+        self.connect_to_spotify()
+
+    def connect_to_spotify(self):
+        connect_to_spotify = self.get_response("ask_spotify_connect")
+
+        if connect_to_spotify == "yes":
+            self.speak_dialog("spotify_connecting")
+            os.system("~/spotifyd --no-daemon")
+            self.speak_dialog("spotify_connected")

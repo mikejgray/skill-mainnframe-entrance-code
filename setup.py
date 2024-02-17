@@ -3,9 +3,9 @@ import os
 from setuptools import setup
 from os import walk, path
 
-URL = "https://github.com/OpenVoiceOS/skill-ovos-boot-finished"
+URL = "https://github.com/XsqrdLabsAdmin/skill-mainnframe-entrance-code"
 SKILL_CLAZZ = "BootFinishedSkill"  # needs to match __init__.py class name
-PYPI_NAME = "ovos-skill-boot-finished"  # pip install PYPI_NAME
+PYPI_NAME = "skill-mainnframe-entrance-code"  # pip install PYPI_NAME
 
 # below derived from github url to ensure standard skill_id
 SKILL_AUTHOR, SKILL_NAME = URL.split(".com/")[-1].split("/")
@@ -62,8 +62,8 @@ setup(
     long_description=long_description,
     url=URL,
     author=SKILL_AUTHOR,
-    description='OVOS finished booting skill',
-    author_email='jarbasai@mailfence.com',
+    description='Mainnframe Entrance Code Skill for OVOS',
+    author_email='mike@graywind.org',
     license='Apache-2.0',
     package_dir={SKILL_PKG: ""},
     package_data={SKILL_PKG: find_resource_files()},
