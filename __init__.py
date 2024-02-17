@@ -35,7 +35,7 @@ class BootFinishedSkill(OVOSSkill):
     attempts = 1
     active_user = ""
     def initialize(self):
-        self.add_event("mycroft.ready", self.handle_ready)
+        self.bus.on("mycroft.ready", self.handle_ready)
 
     @property
     def entrance_codes(self):
@@ -72,7 +72,7 @@ class BootFinishedSkill(OVOSSkill):
         else:
             self.log.debug("Ready notification disabled in settings")
         self.enclosure.eyes_blink("b")
-        if self.settings.get("entrance_codes"):
+        if self.entrance_codes:
             self.authenticate_user()
         else:
             self.log.warning(f"No entrance codes configured, please add them in the skill settings at {self.settings.path}")
