@@ -35,7 +35,7 @@ class BootFinishedSkill(OVOSSkill):
     attempts = 1
     active_user = ""
     def initialize(self):
-        self.bus.on("mycroft.ready", self.handle_ready)
+        self.add_event("mycroft.ready", self.handle_ready)
 
     @property
     def entrance_codes(self):
