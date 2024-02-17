@@ -72,6 +72,8 @@ class BootFinishedSkill(OVOSSkill):
         else:
             self.log.debug("Ready notification disabled in settings")
         self.enclosure.eyes_blink("b")
+        if not self.settings.get("entrance_codes"):
+            self.log.warning(f"No entrance codes configured, please add them in the skill settings at {self.settings.path}")
         self.authenticate_user()
 
     @intent_handler("enable_ready_notification.intent")
