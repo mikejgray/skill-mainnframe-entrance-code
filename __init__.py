@@ -39,7 +39,7 @@ class BootFinishedSkill(OVOSSkill):
 
     @property
     def entrance_codes(self):
-        return self.settings.get("entrance_codes", {})
+        return self.settings.get("entrance_codes") or {}
 
     @property
     def speak_ready(self):
