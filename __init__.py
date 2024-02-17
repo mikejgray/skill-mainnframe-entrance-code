@@ -32,10 +32,10 @@ from ovos_workshop.decorators import intent_handler, skill_api_method
 
 
 class BootFinishedSkill(OVOSSkill):
+    attempts = 1
+    active_user = ""
     def initialize(self):
         self.add_event("mycroft.ready", self.handle_ready)
-        self.attempts = 1
-        self.active_user = ""
 
     @property
     def entrance_codes(self):
