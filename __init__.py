@@ -115,5 +115,5 @@ class BootFinishedSkill(OVOSSkill):
 
         if connect_to_spotify == "yes":
             self.speak_dialog("spotify_connecting")
-            os.system("~/spotifyd --no-daemon")
+            os.system("spotify-up")
             self.speak_dialog("spotify_connected")
