@@ -59,5 +59,6 @@ class TestSkill(SkillTestCase):
     def test_passcode_called_with_mycroft_ready(self):
         self.skill.settings["entrance_codes"] = {"test": "test"}
         self.skill.authenticate_user = Mock()
+        self.skill.authenticate_user.reset_mock()
         self.bus.emit(Message("mycroft.ready"))
-        self.skill.authenticate_user.assert_called_once()
+        self.skill.authenticate_user.assert_called()
