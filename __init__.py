@@ -32,10 +32,12 @@ from ovos_workshop.decorators import intent_handler, skill_api_method
 
 
 class BootFinishedSkill(OVOSSkill):
-    attempts = 1
-    active_user = ""
-    def initialize(self):
+    def __init__(self, *args, bus=None, skill_id="", **kwargs):
+        super().__init__(*args, bus=bus, skill_id=skill_id, **kwargs)
+        self.attempts = 1
+        self.active_user = ""
         self.add_event("mycroft.ready", self.handle_ready)
+        self.authenticate_user()
 
     @property
     def entrance_codes(self):
@@ -106,12 +108,13 @@ class BootFinishedSkill(OVOSSkill):
                 self.speak_dialog("wrong_code", data={"code": user_code})
                 self.attempts += 1
                 self.authenticate_user()
-            self.connect_to_spotify()
-
         else:
             self.speak_dialog("shutdown")
             self.bus.emit(Message("system.shutdown"))
             self.attempts = 1
+            return
+
+        self.connect_to_spotify()
 
     def connect_to_spotify(self):
         connect_to_spotify = self.get_response("ask_spotify_connect")
