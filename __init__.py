@@ -36,14 +36,8 @@ class BootFinishedSkill(OVOSSkill):
         super().__init__(*args, bus=bus, skill_id=skill_id, **kwargs)
         self.attempts = 1
         self.active_user = ""
-        self.set_up_guard()
-
-    def set_up_guard(self):
-        skills_ready = self.bus.wait_for_response(Message("mycroft.skills.is_ready"))
-        if skills_ready is not None and skills_ready.data.get("status"):
-            self.handle_ready(skills_ready)
-        else:
-            self.add_event("mycroft.ready", self.handle_ready)
+        self.add_event("mycroft.ready", self.handle_ready)
+        self.handle_ready(None)
 
     @property
     def entrance_codes(self):
