@@ -37,7 +37,7 @@ class BootFinishedSkill(OVOSSkill):
         self.attempts = 1
         self.active_user = ""
         self.add_event("mycroft.ready", self.handle_ready)
-        self.handle_ready(None)
+        self.authenticate_user()
 
     @property
     def entrance_codes(self):
@@ -108,12 +108,13 @@ class BootFinishedSkill(OVOSSkill):
                 self.speak_dialog("wrong_code", data={"code": user_code})
                 self.attempts += 1
                 self.authenticate_user()
-            self.connect_to_spotify()
-
         else:
             self.speak_dialog("shutdown")
             self.bus.emit(Message("system.shutdown"))
             self.attempts = 1
+            return
+
+        self.connect_to_spotify()
 
     def connect_to_spotify(self):
         connect_to_spotify = self.get_response("ask_spotify_connect")
