@@ -26,6 +26,7 @@
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+from unittest.mock import Mock
 from ovos_bus_client import Message
 from neon_minerva.tests.skill_unit_test_base import SkillTestCase
 
@@ -48,3 +49,15 @@ class TestSkill(SkillTestCase):
         self.assertFalse(self.skill.speak_ready)
         self.skill.speak_dialog.assert_called_once_with(
             "confirm_no_speak_ready")
+
+    def test_passcode_called(self):
+        self.skill.settings["entrance_codes"] = {"test": "test"}
+        self.skill.authenticate_user = Mock()
+        self.skill.handle_ready(None)
+        self.skill.authenticate_user.assert_called_once()
+
+    def test_passcode_called_with_mycroft_ready(self):
+        self.skill.settings["entrance_codes"] = {"test": "test"}
+        self.skill.authenticate_user = Mock()
+        self.bus.emit(Message("mycroft.ready"))
+        self.skill.authenticate_user.assert_called_once()

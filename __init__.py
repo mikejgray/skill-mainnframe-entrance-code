@@ -32,10 +32,15 @@ from ovos_workshop.decorators import intent_handler, skill_api_method
 
 
 class BootFinishedSkill(OVOSSkill):
-    attempts = 1
-    active_user = ""
-    def initialize(self):
-        self.add_event("mycroft.ready", self.handle_ready)
+    def __init__(self, *args, bus=None, skill_id="", **kwargs):
+        super().__init__(*args, bus=bus, skill_id=skill_id, **kwargs)
+        self.attempts = 1
+        self.active_user = ""
+        skills_ready = self.bus.wait_for_response(Message("mycroft.skills.is_ready"))
+        if skills_ready is not None and skills_ready.data.get("status"):
+            self.handle_ready()
+        else:
+            self.add_event("mycroft.ready", self.handle_ready)
 
     @property
     def entrance_codes(self):
