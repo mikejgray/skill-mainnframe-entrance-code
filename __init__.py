@@ -25,7 +25,7 @@
 # LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 # NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 # SOFTWARE,  EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-import os
+import subprocess
 from ovos_bus_client.message import Message
 from ovos_workshop.skills import OVOSSkill
 from ovos_workshop.decorators import intent_handler, skill_api_method
@@ -77,7 +77,9 @@ class BootFinishedSkill(OVOSSkill):
         if self.entrance_codes:
             self.authenticate_user()
         else:
-            self.log.warning(f"No entrance codes configured, please add them in the skill settings at {self.settings.path}")
+            self.log.warning(
+                f"No entrance codes configured, please add them in the skill settings at {self.settings.path}"
+            )
 
     @intent_handler("enable_ready_notification.intent")
     def handle_enable_notification(self, message: Message):
@@ -121,5 +123,15 @@ class BootFinishedSkill(OVOSSkill):
 
         if connect_to_spotify == "yes":
             self.speak_dialog("spotify_connecting")
-            os.system("spotify-up")
+            with subprocess.Popen(
+                ["spotify-up"],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+            ) as process:
+                out, err = process.communicate()
+                if out:
+                    self.log.info(out.strip())
+                if err:
+                    self.log.error(err.strip())
             self.speak_dialog("spotify_connected")
