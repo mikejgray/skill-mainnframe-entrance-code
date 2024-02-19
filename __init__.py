@@ -124,7 +124,7 @@ class BootFinishedSkill(OVOSSkill):
         if connect_to_spotify == "yes":
             self.speak_dialog("spotify_connecting")
             with subprocess.Popen(
-                ["spotify-up"],
+                ["/usr/local/bin/spotify-up"],
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE,
                 text=True,
