@@ -105,7 +105,8 @@ class BootFinishedSkill(OVOSSkill):
                 if user_code.lower().replace(".", "") == entrance_code:
                     self.speak_dialog("valid_code", data={"user": user})
                     self.active_user = user
-                    break
+                    self.connect_to_spotify
+                    return
             if not self.active_user:
                 self.speak_dialog("wrong_code", data={"code": user_code})
                 self.attempts += 1
@@ -114,24 +115,18 @@ class BootFinishedSkill(OVOSSkill):
             self.speak_dialog("shutdown")
             self.bus.emit(Message("system.shutdown"))
             self.attempts = 1
-            return
-
-        self.connect_to_spotify()
 
     def connect_to_spotify(self):
-        connect_to_spotify = self.get_response("ask_spotify_connect")
-
-        if connect_to_spotify == "yes":
-            self.speak_dialog("spotify_connecting")
-            with subprocess.Popen(
-                ["/usr/local/bin/spotify-up"],
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-                text=True,
-            ) as process:
-                out, err = process.communicate()
-                if out:
-                    self.log.info(out.strip())
-                if err:
-                    self.log.error(err.strip())
-            self.speak_dialog("spotify_connected")
+        self.speak_dialog("spotify_connecting")
+        with subprocess.Popen(
+            ["/usr/local/bin/spotify-up"],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+        ) as process:
+            out, err = process.communicate()
+            if out:
+                self.log.info(out.strip())
+                self.speak_dialog("spotify_connected")
+            if err:
+                self.log.error(err.strip())
