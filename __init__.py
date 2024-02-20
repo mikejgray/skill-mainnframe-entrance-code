@@ -119,7 +119,7 @@ class BootFinishedSkill(OVOSSkill):
     def connect_to_spotify(self):
         self.speak_dialog("spotify_connecting")
         with subprocess.Popen(
-            ["/usr/local/bin/spotify-up"],
+            ["spotify-up"],
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             text=True,
