@@ -105,7 +105,7 @@ class BootFinishedSkill(OVOSSkill):
                 if user_code.lower().replace(".", "") == entrance_code:
                     self.speak_dialog("valid_code", data={"user": user})
                     self.active_user = user
-                    self.connect_to_spotify
+                    self.connect_to_spotify()
                     return
             if not self.active_user:
                 self.speak_dialog("wrong_code", data={"code": user_code})
